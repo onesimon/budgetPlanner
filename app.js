@@ -680,13 +680,15 @@ function itemsEditor(list, { filter = () => true, newItem, addLabel, row = itemR
   return [rows, h('button', { type: 'button', class: 'btn-add', onclick: add }, icon('plus'), addLabel)];
 }
 
-function listCard(title, list, addLabel, placeholder, iconName) {
-  return h('section', { class: 'card' },
-    h('div', { class: 'card-head' }, heading(title, iconName), liveMoney(() => sumBy(list), 'card-total')),
-    itemsEditor(list, {
-      placeholder, addLabel,
-      newItem: last => ({ accountId: last?.accountId ?? data.accounts[0].id }),
-    }));
+/** collapseId: se presente la card è una tendina (chiusa di default). */
+function listCard(title, list, addLabel, placeholder, iconName, collapseId = null) {
+  const head = [heading(title, iconName), liveMoney(() => sumBy(list), 'card-total')];
+  const editor = itemsEditor(list, {
+    placeholder, addLabel,
+    newItem: last => ({ accountId: last?.accountId ?? data.accounts[0].id }),
+  });
+  if (collapseId) return collapsible(collapseId, head, editor);
+  return h('section', { class: 'card' }, h('div', { class: 'card-head' }, head), editor);
 }
 
 /**
@@ -790,18 +792,20 @@ function dueBanner(key, { action = true } = {}) {
 
 function transfersCard(list) {
   if (data.accounts.length < 2) return null;
-  return h('section', { class: 'card' },
-    h('div', { class: 'card-head' }, heading('Trasferimenti', 'swap'), liveMoney(() => sumBy(list), 'card-total')),
-    h('p', { class: 'muted small' }, 'Soldi spostati tra i tuoi conti, es. da ING a Intesa o un prelievo da ING a Contanti. Non cambiano il totale.'),
-    itemsEditor(list, {
-      row: transferRow,
-      placeholder: 'Es. Prelievo bancomat',
-      addLabel: 'Aggiungi trasferimento',
-      newItem: last => ({
-        fromId: last?.fromId ?? data.accounts[0].id,
-        toId: last?.toId ?? data.accounts[1].id,
+  return collapsible('transfers',
+    [heading('Trasferimenti', 'swap'), liveMoney(() => sumBy(list), 'card-total')],
+    [
+      h('p', { class: 'muted small' }, 'Soldi spostati tra i tuoi conti, es. da ING a Intesa o un prelievo da ING a Contanti. Non cambiano il totale.'),
+      itemsEditor(list, {
+        row: transferRow,
+        placeholder: 'Es. Prelievo bancomat',
+        addLabel: 'Aggiungi trasferimento',
+        newItem: last => ({
+          fromId: last?.fromId ?? data.accounts[0].id,
+          toId: last?.toId ?? data.accounts[1].id,
+        }),
       }),
-    }));
+    ]);
 }
 
 const FUND_MONTH_COLS = [
@@ -891,9 +895,9 @@ function viewMonth() {
           }),
           h('p', { class: 'muted small' }, 'Saldo del fondo a fine mese (saldo iniziale + tutti i mesi fino a questo).'),
         ], 'collapsible nested') : null),
-    listCard('Entrate', m.incomes, 'Aggiungi entrata', 'Es. Stipendio', 'income'),
-    listCard('Spese fisse', m.fixed, 'Aggiungi spesa fissa', 'Es. Affitto', 'receipt'),
-    listCard('Altre spese', m.variable, 'Aggiungi spesa', 'Es. Cena fuori', 'cart'),
+    listCard('Entrate', m.incomes, 'Aggiungi entrata', 'Es. Stipendio', 'income', 'incomes'),
+    listCard('Spese fisse', m.fixed, 'Aggiungi spesa fissa', 'Es. Affitto', 'receipt', 'fixed'),
+    listCard('Altre spese', m.variable, 'Aggiungi spesa', 'Es. Cena fuori', 'cart', 'variable'),
     transfersCard(m.transfers),
     contributionsCard(m.contributions),
     fundExpensesCard(m.fundExpenses),

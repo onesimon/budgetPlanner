@@ -12,7 +12,7 @@ Non usa build, framework o database: è composta solo da HTML, CSS e JavaScript.
   - **Spese pagate dai fondi**: per esempio la bolletta della luce. Riducono il saldo del fondo, non quello dei conti.
 - **Trasferimenti** (solo nel mese): soldi spostati da un conto a un altro, per esempio da ING a Intesa o un prelievo da ING a Contanti. Il conto di partenza scende, quello di arrivo sale, il totale non cambia.
 - **Modello**: entrate ricorrenti, spese fisse e quote ai fondi (annue, divise per 12) vengono copiate in ogni nuovo mese.
-- **Mese**: entrate, spese fisse, altre spese, trasferimenti, quote ai fondi e spese pagate dai fondi. Il riepilogo per conto e per fondo si aggiorna mentre scrivi. Le sezioni dei fondi sono a fisarmonica, chiuse finché non le apri.
+- **Mese**: entrate, spese fisse, altre spese, trasferimenti, quote ai fondi e spese pagate dai fondi. Il riepilogo per conto e per fondo si aggiorna mentre scrivi. Le sezioni del mese sono a tendina, chiuse finché non le apri.
 - **Riepilogo**: saldo complessivo per conto e per fondo, totale di conti e fondi insieme, poi totali per conto, per fondo e per mese, con filtro per anno.
 - **Buoni pasto**: si inseriscono come entrata sul conto "Buoni pasto". La spesa pagata con i buoni va registrata come spesa fissa sullo stesso conto.
 
